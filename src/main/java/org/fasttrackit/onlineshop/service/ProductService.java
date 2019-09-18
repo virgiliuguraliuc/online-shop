@@ -53,7 +53,7 @@ public Product getProduct(long id) {
 }
 
 public Page<Product> getProducts (GetProductsRequest request, Pageable pageable){
-    LOGGER.info("retrieving productrs: {}", request);
+    LOGGER.info("retrieving products: {}", request);
 
     if(request != null && request.getPartialName() != null && request.getMinimumQuantity() != null) {
         return productRepository.findByNameContainingAndQuantityGreaterThanEqual(request.getPartialName(), request.getMinimumQuantity(), pageable);
