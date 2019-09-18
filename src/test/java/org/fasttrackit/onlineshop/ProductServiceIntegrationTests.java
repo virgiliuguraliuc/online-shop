@@ -54,6 +54,33 @@ public class ProductServiceIntegrationTests {
     public void TestGetProductbyID_whenNonExistingEntity_thenThrowNotFoundException(){
         productService.getProduct(999999);
     }
+    @Test
+    public void TestUpdateProduct_whenValidRequest_thenReturnUpdatedProduct(){
+        Product product = createProduct();
+
+        SaveProductRequest request = new SaveProductRequest();
+        request.setName(createProduct().getName() + " Updated ");
+        request.setPrice(createProduct().getPrice() + 1000);
+        request.setQuantity(createProduct().getQuantity() + 1000);
+        request.setImagePath(createProduct().getImagePath());
+        request.setDescription(createProduct().getDescription() +"Updated");
+        Product updatedProduct = productService.updateProduct(product.getId(), request);
+
+        assertThat(updatedProduct, notNullValue());
+        assertThat(updatedProduct.getId(), notNullValue());
+        assertThat("unexpected product name",updatedProduct.getName(), is(request.getName()));
+        assertThat(updatedProduct.getPrice(), is(request.getPrice()));
+    }
+
+    @Test (expected = ResourceNotFoundException.class)
+    public void TestDeletedProduct_whenValidRequest_thenThrowResourceNotFound(){
+        Product product = createProduct();
+        Product product2 = createProduct();
+        productService.deleteProduct(product.getId());
+        productService.getProduct(product.getId());
+
+
+    }
 
 
     private Product createProduct() {
@@ -77,5 +104,7 @@ public class ProductServiceIntegrationTests {
         assertThat(product.getImagePath(), is(request.getImagePath()));
 
     return product;}
+
+
 
 }
