@@ -1,6 +1,7 @@
 package org.fasttrackit.onlineshop;
 
 import org.fasttrackit.onlineshop.domain.Product;
+import org.fasttrackit.onlineshop.exception.ResourceNotFoundException;
 import org.fasttrackit.onlineshop.service.ProductService;
 import org.fasttrackit.onlineshop.transfer.product.SaveProductRequest;
 import org.junit.Test;
@@ -26,6 +27,36 @@ public class ProductServiceIntegrationTests {
     @Test
     public void testCreateProduct_whenValidRequest_thenReturnCreatedProduct(){
 
+        createProduct();
+
+    }
+
+    @Test(expected = TransactionSystemException.class)
+    public void testCreateProduct_whenInvalidRequest_thenThrowException(){
+        SaveProductRequest request = new SaveProductRequest();
+        //we're not setting any values on the request because we want to send an invalid request
+        //we want to be as specific as we can in the exception
+        Product product = productService.createProduct(request);
+
+    }
+
+    //all tests should be indepented : daca vreau sa updatez un produs voi crea un produs si il voi updata
+    @Test
+    public void TestGetProductByID_whenExistingEntity_thenReturnProduct(){
+        Product createdProduct = createProduct();
+        Product retrievedProduct = productService.getProduct(createdProduct.getId());
+
+        assertThat(retrievedProduct, notNullValue());
+        assertThat(retrievedProduct.getId(), is(createdProduct.getId()));
+        assertThat(retrievedProduct.getName(), is(createdProduct.getName()));
+    }
+    @Test(expected = ResourceNotFoundException.class)
+    public void TestGetProductbyID_whenNonExistingEntity_thenThrowNotFoundException(){
+        productService.getProduct(999999);
+    }
+
+
+    private Product createProduct() {
         SaveProductRequest request = new SaveProductRequest();
         request.setName("Computer");
         request.setDescription("computes things");
@@ -45,17 +76,6 @@ public class ProductServiceIntegrationTests {
         assertThat(product.getPrice(), is(request.getPrice()));
         assertThat(product.getImagePath(), is(request.getImagePath()));
 
-    }
+    return product;}
 
-
-    @Test(expected = TransactionSystemException.class)
-    public void testCreateProduct_whenInvalidRequest_thenThrowException(){
-        SaveProductRequest request = new SaveProductRequest();
-        //we're not setting any values on the request because we want to send an invalid request
-        //we want to be as specific as we can in the exception
-        Product product = productService.createProduct(request);
-
-    }
-
-    //all tests should be indepented : daca vreau sa updatez un produs voi crea un produs si il voi updata
 }
