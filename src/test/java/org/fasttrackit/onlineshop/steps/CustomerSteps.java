@@ -18,7 +18,7 @@ public class CustomerSteps {
     private CustomerService customerService;
 
 
-    private Customer createCustomer() {
+   public Customer createCustomer() {
         SaveCustomerRequest request = new SaveCustomerRequest();
         request.setFirstName("Customer_first_name");
         request.setLastName("customer_last_name");

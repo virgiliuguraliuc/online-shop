@@ -26,7 +26,7 @@ public class CustomerServiceIntegrationTests {
 
     @Test
     public void testCreateCustomer_whenValidRequest_thenReturnCreatedCustomer(){
-        customerSteps.createCustomer;
+        customerSteps.createCustomer();
 
 
     }
