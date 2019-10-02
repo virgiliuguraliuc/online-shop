@@ -3,6 +3,7 @@ package org.fasttrackit.onlineshop;
 import org.fasttrackit.onlineshop.domain.Product;
 import org.fasttrackit.onlineshop.exception.ResourceNotFoundException;
 import org.fasttrackit.onlineshop.service.ProductService;
+import org.fasttrackit.onlineshop.steps.ProductSteps;
 import org.fasttrackit.onlineshop.transfer.product.SaveProductRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,11 +24,13 @@ public class ProductServiceIntegrationTests {
 
     @Autowired
     private ProductService productService;
+    @Autowired
+    private ProductSteps productSteps;
 
     @Test
     public void testCreateProduct_whenValidRequest_thenReturnCreatedProduct(){
 
-        createProduct();
+        productSteps.createProduct();
 
     }
 
@@ -43,7 +46,7 @@ public class ProductServiceIntegrationTests {
     //all tests should be indepented : daca vreau sa updatez un produs voi crea un produs si il voi updata
     @Test
     public void TestGetProductByID_whenExistingEntity_thenReturnProduct(){
-        Product createdProduct = createProduct();
+        Product createdProduct = productSteps.createProduct();
         Product retrievedProduct = productService.getProduct(createdProduct.getId());
 
         assertThat(retrievedProduct, notNullValue());
@@ -56,14 +59,14 @@ public class ProductServiceIntegrationTests {
     }
     @Test
     public void TestUpdateProduct_whenValidRequest_thenReturnUpdatedProduct(){
-        Product product = createProduct();
+        Product product =productSteps. createProduct();
 
         SaveProductRequest request = new SaveProductRequest();
-        request.setName(createProduct().getName() + " Updated ");
-        request.setPrice(createProduct().getPrice() + 1000);
-        request.setQuantity(createProduct().getQuantity() + 1000);
-        request.setImagePath(createProduct().getImagePath());
-        request.setDescription(createProduct().getDescription() +"Updated");
+        request.setName(productSteps.createProduct().getName() + " Updated ");
+        request.setPrice(productSteps.createProduct().getPrice() + 1000);
+        request.setQuantity(productSteps.createProduct().getQuantity() + 1000);
+        request.setImagePath(productSteps.createProduct().getImagePath());
+        request.setDescription(productSteps.createProduct().getDescription() +"Updated");
         Product updatedProduct = productService.updateProduct(product.getId(), request);
 
         assertThat(updatedProduct, notNullValue());
@@ -74,8 +77,8 @@ public class ProductServiceIntegrationTests {
 
     @Test (expected = ResourceNotFoundException.class)
     public void TestDeletedProduct_whenValidRequest_thenThrowResourceNotFound(){
-        Product product = createProduct();
-        Product product2 = createProduct();
+        Product product = productSteps.createProduct();
+        Product product2 = productSteps.createProduct();
         productService.deleteProduct(product.getId());
         productService.getProduct(product.getId());
 
@@ -83,27 +86,6 @@ public class ProductServiceIntegrationTests {
     }
 
 
-    private Product createProduct() {
-        SaveProductRequest request = new SaveProductRequest();
-        request.setName("Computer");
-        request.setDescription("computes things");
-        request.setPrice(2000);
-        request.setQuantity(2);
-        request.setImagePath("over there");
-
-
-        Product product = productService.createProduct(request);
-
-        assertThat(product, notNullValue());
-        assertThat(product.getId(), notNullValue());
-        assertThat(product.getId(), greaterThan((0L)));
-        assertThat("unexpected product name",product.getName(), is(request.getName()));
-        //we can specify the reason for the failure of the test like above
-        assertThat(product.getDescription(), is(request.getDescription()));
-        assertThat(product.getPrice(), is(request.getPrice()));
-        assertThat(product.getImagePath(), is(request.getImagePath()));
-
-    return product;}
 
 
 

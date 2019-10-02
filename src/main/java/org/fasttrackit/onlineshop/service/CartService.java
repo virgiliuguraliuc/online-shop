@@ -60,7 +60,7 @@ public class CartService {
 
         Iterator<Product> iterator =cart.getProducts().iterator();
         while (iterator.hasNext()) {
-           Product product = cart.getProducts().iterator().next();
+           Product product = iterator.next();
            ProductInCartResponse productInCartResponse = new ProductInCartResponse();
            productInCartResponse.setId(product.getId());
            productInCartResponse.setName(product.getName());
