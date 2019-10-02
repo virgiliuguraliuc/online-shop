@@ -1,10 +1,15 @@
 package org.fasttrackit.onlineshop.steps;
 
 import org.fasttrackit.onlineshop.domain.Customer;
+import org.fasttrackit.onlineshop.domain.Product;
+import org.fasttrackit.onlineshop.exception.ResourceNotFoundException;
 import org.fasttrackit.onlineshop.service.CustomerService;
 import org.fasttrackit.onlineshop.transfer.customer.SaveCustomerRequest;
+import org.fasttrackit.onlineshop.transfer.product.SaveProductRequest;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.TransactionSystemException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -16,6 +21,8 @@ public class CustomerSteps {
 
     @Autowired
     private CustomerService customerService;
+    @Autowired
+    private ProductSteps productSteps;
 
 
    public Customer createCustomer() {
@@ -35,6 +42,18 @@ public class CustomerSteps {
 
         return customer;}
 
+    @Test
+    public void testCreateProduct_whenValidRequest_thenReturnCreatedProduct(){
+
+        productSteps.createProduct();
+
+    }
 
 
-}
+    //all tests should be indepented : daca vreau sa updatez un produs voi crea un produs si il voi updata
+
+
+
+    }
+
+
